@@ -1,0 +1,1966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soirée & Tre - Your Next Event Venue</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Montserrat', 'Circular', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #222;
+        }
+
+        body.loading {
+            overflow: hidden;
+        }
+
+        /* Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #E4E3DE 0%, #D0CEC9 50%, #B8B6B1 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease-out;
+        }
+
+        .loader.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-logo {
+            width: 300px;
+            padding: 40px;
+            border-radius: 30px;
+            background: #E4E3DE;
+            box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.1), -12px -12px 24px rgba(255, 255, 255, 0.8);
+            animation: neuPress 1.8s ease-in-out forwards;
+        }
+
+        @keyframes neuPress {
+            0% {
+                box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.1), -12px -12px 24px rgba(255, 255, 255, 0.8);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: inset 8px 8px 16px rgba(0, 0, 0, 0.15), inset -8px -8px 16px rgba(255, 255, 255, 0.7);
+                transform: scale(0.98);
+            }
+            100% {
+                box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.1), -12px -12px 24px rgba(255, 255, 255, 0.8);
+                transform: scale(1);
+            }
+        }
+
+        .loader-logo img {
+            width: 100%;
+            display: block;
+        }
+
+        .page-content {
+            opacity: 0;
+            transition: opacity 0.8s ease-in;
+            min-height: 100vh;
+        }
+
+        .page-content.show {
+            opacity: 1;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #222;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .nav-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+            flex: 1;
+            justify-content: flex-end;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #222;
+            font-size: 14px;
+            font-weight: 400;
+            transition: all 0.3s ease;
+            padding-bottom: 6px;
+            border-bottom: 2px solid transparent;
+        }
+
+        nav a:hover {
+            color: #FF385C;
+        }
+
+        nav a.active {
+            font-weight: 700;
+            border-bottom-color: #FF385C;
+            color: #222;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+            padding: 6px;
+            z-index: 1002;
+        }
+
+        .hamburger span {
+            width: 20px;
+            height: 2px;
+            background: #222;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        .mobile-nav, .mobile-overlay {
+            display: none;
+        }
+
+        /* Buttons */
+        .cta-button {
+            background: #FF385C;
+            color: white;
+            border: none;
+            padding: 16px 48px;
+            border-radius: 28px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 6px 6px 12px rgba(255, 56, 92, 0.3), -6px -6px 12px rgba(255, 120, 140, 0.2);
+        }
+
+        .cta-button:hover {
+            box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.2), inset -4px -4px 8px rgba(255, 120, 140, 0.1);
+            transform: scale(0.98);
+        }
+
+        .cta-button:active {
+            box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.25), inset -6px -6px 12px rgba(255, 120, 140, 0.1);
+            transform: scale(0.96);
+        }
+
+        .header-actions .cta-button {
+            padding: 10px 24px;
+            font-size: 14px;
+        }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
+                        url('https://raw.githubusercontent.com/richardsen/images/93a0c0ecde6a136baf7c1319cf8dda1bf707c350/Loader%20Screen.jpeg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            margin-top: 80px;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            padding: 0 40px;
+            width: 100%;
+        }
+
+        .hero-content a {
+            text-decoration: none;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.1;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: translateY(20px);
+            font-family: 'Montserrat', sans-serif;
+            transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+            letter-spacing: -0.5px;
+        }
+
+        .hero h1.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tagline {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            font-family: 'Montserrat', sans-serif;
+            transition: opacity 1.2s ease-out 0.8s, transform 1.2s ease-out 0.8s;
+            letter-spacing: 0.5px;
+        }
+
+        .tagline.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .flexible-button {
+            background: #FF385C;
+            color: white;
+            padding: 16px 40px;
+            border-radius: 32px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            box-shadow: 6px 6px 12px rgba(255, 56, 92, 0.3), -6px -6px 12px rgba(255, 120, 140, 0.2);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .flexible-button.show {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 1s ease-out 1.6s, transform 1s ease-out 1.6s, all 0.2s;
+        }
+
+        .flexible-button:hover {
+            box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.2), inset -4px -4px 8px rgba(255, 120, 140, 0.1);
+            transform: translateY(0) scale(0.98);
+        }
+
+        .flexible-button:active {
+            box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.25), inset -6px -6px 12px rgba(255, 120, 140, 0.1);
+            transform: translateY(0) scale(0.96);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .scroll-indicator::after {
+            content: '↓';
+            font-size: 32px;
+            color: white;
+            opacity: 0.8;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        /* Sections */
+        .section {
+            padding: 64px 80px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #222;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: -0.5px;
+        }
+
+        .section-title.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            color: #717171;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s;
+        }
+
+        .section-subtitle.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Carousels */
+        .carousel-container {
+            position: relative;
+            max-width: 1400px;
+            margin: 0 auto;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .carousel-wrapper {
+            position: relative;
+            height: 500px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .carousel-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-slide:hover .carousel-image {
+            transform: scale(1.05);
+        }
+
+        .carousel-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 40px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+        }
+
+        .carousel-overlay h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .carousel-overlay p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .carousel-nav:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-nav.prev {
+            left: 24px;
+        }
+
+        .carousel-nav.next {
+            right: 24px;
+        }
+
+        .carousel-dots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #E5E5E5;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .carousel-dot.active {
+            background: #FF385C;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        .event-count {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 14px;
+            color: #717171;
+        }
+
+        /* Property Images */
+        .property-images-section {
+            padding: 80px 60px;
+            background: white;
+        }
+
+        /* Past Events */
+        .past-events {
+            padding: 80px 60px;
+            background: #F7F6F3;
+        }
+
+        .event-filters {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .filter-pill {
+            padding: 12px 28px;
+            border-radius: 32px;
+            border: none;
+            background: white;
+            color: #717171;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.08), -4px -4px 8px rgba(255, 255, 255, 0.8);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .filter-pill:hover {
+            box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.1), inset -3px -3px 6px rgba(255, 255, 255, 0.5);
+            transform: scale(0.98);
+        }
+
+        .filter-pill.active {
+            background: #222;
+            color: white;
+            box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.3), inset -4px -4px 8px rgba(80, 80, 80, 0.2);
+        }
+
+        /* About Us & Benefits - SINGLE SECTION */
+        .about-benefits-section {
+            background: white;
+            padding: 80px 60px;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 60px;
+            max-width: 1200px;
+            margin: 0 auto 80px;
+            align-items: center;
+        }
+
+        .about-logo-container {
+            text-align: center;
+        }
+
+        .about-logo-box {
+            padding: 50px;
+            background: #F7F6F3;
+            border-radius: 30px;
+            box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.1), -12px -12px 24px rgba(255, 255, 255, 0.8);
+            display: inline-block;
+        }
+
+        .about-logo-box img {
+            width: 100%;
+            max-width: 250px;
+            display: block;
+        }
+
+        .about-text {
+            text-align: left;
+            font-size: 16px;
+            line-height: 1.9;
+            color: #444;
+            padding: 48px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+        }
+
+        .about-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .benefits-heading {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-align: center;
+            color: #222;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .benefit-card {
+            background: #F7F6F3;
+            padding: 32px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .benefit-card:nth-child(1) { animation: fadeInUp 0.6s ease-out 0.3s forwards; opacity: 0; }
+        .benefit-card:nth-child(2) { animation: fadeInUp 0.6s ease-out 0.4s forwards; opacity: 0; }
+        .benefit-card:nth-child(3) { animation: fadeInUp 0.6s ease-out 0.5s forwards; opacity: 0; }
+        .benefit-card:nth-child(4) { animation: fadeInUp 0.6s ease-out 0.6s forwards; opacity: 0; }
+        .benefit-card:nth-child(5) { animation: fadeInUp 0.6s ease-out 0.7s forwards; opacity: 0; }
+        .benefit-card:nth-child(6) { animation: fadeInUp 0.6s ease-out 0.8s forwards; opacity: 0; }
+
+        .benefit-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .benefit-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .benefit-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #222;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .benefit-card p {
+            font-size: 14px;
+            color: #717171;
+            line-height: 1.6;
+        }
+
+        /* Testimonials */
+        .testimonials-section {
+            background: #F7F6F3;
+            padding: 80px 60px;
+        }
+
+        .testimonials-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 36px 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .testimonial-card:nth-child(1) { animation-delay: 0.3s; }
+        .testimonial-card:nth-child(2) { animation-delay: 0.4s; }
+        .testimonial-card:nth-child(3) { animation-delay: 0.5s; }
+        .testimonial-card:nth-child(4) { animation-delay: 0.6s; }
+
+        .testimonial-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+        }
+
+        .testimonial-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 24px;
+            font-style: italic;
+        }
+
+        .testimonial-author-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #222;
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 4px;
+        }
+
+        .testimonial-author-handle {
+            font-size: 14px;
+            color: #FF385C;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .testimonial-author-handle img {
+            width: 18px;
+            height: 18px;
+            opacity: 0.8;
+        }
+
+        .testimonial-icon {
+            font-size: 48px;
+            opacity: 0.15;
+            margin-bottom: 16px;
+        }
+
+        /* Contact */
+        .contact-section {
+            background: #F7F6F3;
+        }
+
+        .contact-grid {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .contact-card {
+            background: white;
+            padding: 32px;
+            border-radius: 16px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            flex: 0 1 280px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .contact-card:nth-child(1) {
+            animation: fadeInUp 0.6s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        .contact-card:nth-child(2) {
+            animation: fadeInUp 0.6s ease-out 0.5s forwards;
+            opacity: 0;
+        }
+
+        .contact-card:nth-child(3) {
+            animation: fadeInUp 0.6s ease-out 0.7s forwards;
+            opacity: 0;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.08), -8px -8px 16px rgba(255, 255, 255, 0.8);
+        }
+
+        .contact-card:active {
+            transform: translateY(0);
+            box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.1), inset -4px -4px 8px rgba(255, 255, 255, 0.5);
+        }
+
+        .contact-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .contact-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #222;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .contact-card a {
+            color: #FF385C;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background: white;
+            position: relative;
+            padding: 64px 80px;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 40px;
+            max-width: 1400px;
+            position: relative;
+            margin: 60px auto 0;
+        }
+
+        .steps-grid::before {
+            content: '';
+            position: absolute;
+            top: 80px;
+            left: 10%;
+            right: 8.5%;
+            height: 4px;
+            background: #FF385C;
+            z-index: 0;
+            box-shadow: 
+                0 3px 12px rgba(255, 56, 92, 0.5), 
+                0 0 20px rgba(255, 56, 92, 0.3),
+                0 6px 24px rgba(255, 56, 92, 0.2);
+            border-radius: 2px;
+        }
+
+        .steps-grid::after {
+            content: '✨';
+            position: absolute;
+            top: 68px;
+            right: 9%;
+            font-size: 28px;
+            z-index: 1;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.2) rotate(15deg);
+                opacity: 1;
+            }
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 24px 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-card:nth-child(1) { animation: fadeInUp 0.6s ease-out 0.3s forwards; opacity: 0; }
+        .step-card:nth-child(2) { animation: fadeInUp 0.6s ease-out 0.4s forwards; opacity: 0; }
+        .step-card:nth-child(3) { animation: fadeInUp 0.6s ease-out 0.5s forwards; opacity: 0; }
+        .step-card:nth-child(4) { animation: fadeInUp 0.6s ease-out 0.6s forwards; opacity: 0; }
+        .step-card:nth-child(5) { animation: fadeInUp 0.6s ease-out 0.7s forwards; opacity: 0; }
+
+        .step-icon-wrapper {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 24px;
+            position: relative;
+        }
+
+        .step-icon-circle {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FFE5EC 0%, #FFF5F7 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 8px 24px rgba(255, 56, 92, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover .step-icon-circle {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 12px 32px rgba(255, 56, 92, 0.25);
+        }
+
+        .step-icon {
+            font-size: 56px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 40px;
+            height: 40px;
+            background: #FF385C;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(255, 56, 92, 0.4);
+            z-index: 3;
+        }
+
+        .step-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 12px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .step-card p {
+            font-size: 14px;
+            color: #717171;
+            line-height: 1.6;
+        }
+
+        /* Explore */
+        .explore-section {
+            background: #F7F6F3;
+            padding: 80px 80px;
+        }
+
+        /* CTA */
+        .cta-section {
+            background: #E8E6E1;
+            color: #222;
+            text-align: center;
+            padding: 80px 40px;
+            box-shadow: inset 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .cta-section h2 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #222;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            margin-bottom: 32px;
+            color: #717171;
+        }
+
+        .contact-links {
+            margin-top: 32px;
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+        }
+
+        .contact-links a {
+            color: #FF385C !important;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.2s;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-links a .icon {
+            font-size: 20px;
+            color: #FF385C !important;
+        }
+
+        .contact-links a img.instagram-icon {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+        }
+
+        .contact-links a:hover {
+            color: #E31C5F !important;
+        }
+
+        .contact-links a:hover .icon {
+            color: #E31C5F !important;
+        }
+
+        /* Footer */
+        footer {
+            background: #F7F6F3;
+            padding: 32px 80px;
+            text-align: center;
+        }
+
+        .footer-copyright {
+            font-size: 14px;
+            color: #717171;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .steps-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 60px 40px;
+            }
+            
+            .steps-grid::before, .steps-grid::after {
+                display: none;
+            }
+
+            .contact-grid {
+                flex-wrap: wrap;
+                gap: 24px;
+            }
+
+            .testimonials-container {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr !important;
+                gap: 40px !important;
+            }
+
+            .about-logo-box img {
+                max-width: 200px !important;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 16px 24px;
+            }
+
+            .logo-text {
+                font-size: 16px;
+            }
+
+            .logo img {
+                height: 32px;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .mobile-nav {
+                display: block;
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 80%;
+                max-width: 300px;
+                height: 100vh;
+                background: white;
+                box-shadow: 4px 0 12px rgba(0,0,0,0.1);
+                transition: left 0.3s ease;
+                z-index: 1001;
+                padding-top: 80px;
+            }
+
+            .mobile-nav.active {
+                left: 0;
+            }
+
+            .mobile-nav ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            .mobile-nav li {
+                border-bottom: 1px solid #f0f0f0;
+            }
+
+            .mobile-nav a {
+                display: block;
+                padding: 20px 32px;
+                color: #222;
+                text-decoration: none;
+                font-size: 16px;
+                font-weight: 500;
+                transition: background 0.2s;
+            }
+
+            .mobile-nav a:hover {
+                background: #f7f7f7;
+                color: #FF385C;
+            }
+
+            .mobile-nav a.active {
+                font-weight: 700;
+                color: #FF385C;
+                border-left: 4px solid #FF385C;
+            }
+
+            .nav-wrapper {
+                gap: 12px;
+                flex: none;
+            }
+
+            .header-actions .cta-button {
+                display: none;
+            }
+
+            .mobile-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 1000;
+            }
+
+            .mobile-overlay.active {
+                display: block;
+            }
+
+            .section, footer {
+                padding-left: 24px;
+                padding-right: 24px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+                margin-bottom: 8px;
+            }
+            
+            .tagline {
+                font-size: 16px;
+                margin-bottom: 20px;
+            }
+
+            .flexible-button {
+                padding: 12px 32px;
+                font-size: 14px;
+            }
+
+            .about-text {
+                font-size: 15px !important;
+                line-height: 1.8 !important;
+                padding: 32px !important;
+            }
+            
+            .steps-grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+            
+            .step-icon-wrapper {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .step-icon {
+                font-size: 48px;
+            }
+
+            .how-it-works {
+                padding: 64px 24px;
+            }
+
+            .contact-grid {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .contact-card {
+                flex: 1;
+            }
+
+            .explore-section {
+                padding: 64px 24px;
+            }
+
+            .carousel-wrapper {
+                height: 400px;
+                border-radius: 16px;
+            }
+
+            .carousel-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+
+            .carousel-nav.prev {
+                left: 12px;
+            }
+
+            .carousel-nav.next {
+                right: 12px;
+            }
+
+            .carousel-overlay {
+                padding: 24px;
+            }
+
+            .carousel-overlay h3 {
+                font-size: 24px;
+            }
+
+            .carousel-overlay p {
+                font-size: 14px;
+            }
+
+            footer {
+                padding: 24px;
+            }
+
+            .loader-logo {
+                width: 200px;
+                padding: 30px;
+            }
+
+            .testimonials-section {
+                padding: 64px 24px;
+            }
+
+            .testimonial-card {
+                padding: 32px;
+            }
+
+            .testimonial-text {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body class="loading">
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-logo">
+            <img src="https://raw.githubusercontent.com/richardsen/images/ac4222dd6546651fdc808d5740afa89f44161b6d/Logo%20(1).png" alt="Soirée & Tre">
+        </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+    <div class="mobile-nav" id="mobileNav">
+        <ul>
+            <li><a href="#venue">Venue</a></li>
+            <li><a href="#property">Property</a></li>
+            <li><a href="#events">Past Events</a></li>
+            <li><a href="#about">About</a></li>
+        </ul>
+    </div>
+
+    <!-- Page Content -->
+    <div class="page-content" id="pageContent">
+    
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <img src="https://raw.githubusercontent.com/richardsen/images/ac4222dd6546651fdc808d5740afa89f44161b6d/Logo%20(1).png" alt="Soirée & Tre">
+            <span class="logo-text">Soirée & Tre</span>
+        </div>
+        <div class="nav-wrapper">
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#venue">Venue</a></li>
+                    <li><a href="#property">Property</a></li>
+                    <li><a href="#events">Past Events</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLScB8pnXtVzU6rrasBjty6k3_fanaxl9GRxuYTTtlWqlg8KnaA/viewform" target="_blank" class="cta-button">Get In Touch</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero" id="venue">
+        <div class="hero-content">
+            <h1>Your Next Event Venue is here...</h1>
+            <div class="tagline">Find the perfect venue</div>
+            <a href="#events"><button class="flexible-button">Discover more</button></a>
+        </div>
+        <div class="scroll-indicator"></div>
+    </section>
+
+    <!-- Property Images -->
+    <section class="section property-images-section" id="property">
+        <h2 class="section-title">Property Images</h2>
+        <p class="section-subtitle">Explore this stunning venue</p>
+        
+        <div class="carousel-container">
+            <div class="carousel-wrapper">
+                <div class="carousel-track" id="propertyCarouselTrack"></div>
+                <button class="carousel-nav prev" id="propertyPrevBtn">←</button>
+                <button class="carousel-nav next" id="propertyNextBtn">→</button>
+            </div>
+            <div class="carousel-dots" id="propertyCarouselDots"></div>
+            <div class="event-count" id="propertyCount"></div>
+        </div>
+    </section>
+
+    <!-- Past Events -->
+    <section class="section past-events" id="events">
+        <h2 class="section-title">Past events @the location</h2>
+        <p class="section-subtitle">Explore our collection of memorable experiences</p>
+        
+        <div class="event-filters">
+            <button class="filter-pill active" data-event="nh7">NH7 Weekender</button>
+            <button class="filter-pill" data-event="meghalayan">Meghalayan Age</button>
+            <button class="filter-pill" data-event="campsites">Campsites</button>
+        </div>
+
+        <div class="carousel-container">
+            <div class="carousel-wrapper">
+                <div class="carousel-track" id="carouselTrack"></div>
+                <button class="carousel-nav prev" id="prevBtn">←</button>
+                <button class="carousel-nav next" id="nextBtn">→</button>
+            </div>
+            <div class="carousel-dots" id="carouselDots"></div>
+            <div class="event-count" id="eventCount"></div>
+        </div>
+    </section>
+
+    <!-- About Us & Why Partner (SINGLE COMBINED SECTION) -->
+    <section class="section about-benefits-section" id="about">
+        <h2 class="section-title">About Us</h2>
+        
+        <div class="about-grid">
+            <div class="about-logo-container">
+                <div class="about-logo-box">
+                    <img src="https://raw.githubusercontent.com/richardsen/images/ac4222dd6546651fdc808d5740afa89f44161b6d/Logo%20(1).png" alt="Soirée & Tre Logo">
+                </div>
+            </div>
+            <div class="about-text">
+                <p>Soirée & Tre enables access to a venue for hosting events but this is more than a venue; it's land we've cherished and is family owned and managed. It is truly one-of-a-kind scenery for a real, natural backdrop.</p>
+                <p>The owner of the property has a strong commitment to protect the beauty and natural integrity of the location while still enabling and successfully hosting memorable events—from small gatherings and camp experiences to major launch festivals like the Meghalaya Age, NH7 Weekender—marking a memorable achievement for small family owned businesses.</p>
+                <p>We are looking to partner with the right people and businesses who share our vision for quality and respect for this special space. Since we run things directly, you get consistent, personal attention from the team. Let's build the amazing event you're dreaming of - get in touch with us.</p>
+            </div>
+        </div>
+        
+        <h3 class="benefits-heading">Why partner with us?</h3>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">🛡️</div>
+                <h3>Zero Incident Safety Record</h3>
+                <p>Our impeccable safety track record ensures peace of mind for all events and activities.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">🎪</div>
+                <h3>Historical Evidence of Event Festivals</h3>
+                <p>Proven track record of successfully hosting diverse events.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">🏔️</div>
+                <h3>Unique Topography</h3>
+                <p>Our distinctive landscape offers a one-of-a-kind backdrop.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">🏡</div>
+                <h3>Single Owner Asset</h3>
+                <p>Streamlined decision-making through unified ownership.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">🌿</div>
+                <h3>Aesthetic and Environmental Appeal</h3>
+                <p>Stunning natural beauty with eco-conscious practices.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">🤝</div>
+                <h3>Community Integration</h3>
+                <p>Deep-rooted connections with local communities.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section testimonials-section">
+        <h2 class="section-title">Visitor Testimonials</h2>
+        <p class="section-subtitle">Real experiences from real people</p>
+        
+        <div class="testimonials-container">
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    The NH7 Weekender in Meghalaya was legendary. The atmosphere was electric, but the location was truly the best part of the experience —watching the artists perform from the serene surrounding hills made it an unforgettable festival experience.
+                </div>
+                <div class="testimonial-author">
+                    <div class="testimonial-author-info">
+                        <div class="testimonial-author-name">Douglas Warjri</div>
+                        <div class="testimonial-author-handle">
+                            <img src="https://raw.githubusercontent.com/richardsen/images/7a356ce02a1adbc57b6b36fb4a6ad375f3e2222e/instagram.png" alt="Instagram">
+                            @douglas_warjri
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    Attending the NH7 Weekender in Mukhla was magical, defined by the breathtaking landscape of the Jaintia Hills with their rolling greens and crisp air. It was the perfect escape, offering a soulful weekend entirely surrounded by nature.
+                </div>
+                <div class="testimonial-author">
+                    <div class="testimonial-author-info">
+                        <div class="testimonial-author-name">Senovia Kharshandi</div>
+                        <div class="testimonial-author-handle">
+                            <img src="https://raw.githubusercontent.com/richardsen/images/7a356ce02a1adbc57b6b36fb4a6ad375f3e2222e/instagram.png" alt="Instagram">
+                            @senovia_kharshandi
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    The moment I arrived and saw the campsite nestled among the trees, I was immediately captivated. It was absolutely breathtaking. Setting up my tent right there, amidst the rolling green hills, felt truly magical. Waking up to the crisp morning air cemented the feeling that this was the perfect, soulful escape. The unforgettable experience had nature providing the most stunning backdrop all weekend long.
+                </div>
+                <div class="testimonial-author">
+                    <div class="testimonial-author-info">
+                        <div class="testimonial-author-name">Prakash Kamble</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <div class="testimonial-text">
+                    I've been to countless shows, but nothing compares to the energy and sheer beauty of watching my favorite artists against this breathtaking natural backdrop. It turns a great music experience into an unforgettable, soulful event. Truly the best outdoor venue in India.
+                </div>
+                <div class="testimonial-author">
+                    <div class="testimonial-author-info">
+                        <div class="testimonial-author-name">Terrance Maxter Massar</div>
+                        <div class="testimonial-author-handle">
+                            <img src="https://raw.githubusercontent.com/richardsen/images/7a356ce02a1adbc57b6b36fb4a6ad375f3e2222e/instagram.png" alt="Instagram">
+                            @terryfficc
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section contact-section" id="contact">
+        <h2 class="section-title">Get in touch</h2>
+        <div class="contact-grid">
+            <div class="contact-card" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLScB8pnXtVzU6rrasBjty6k3_fanaxl9GRxuYTTtlWqlg8KnaA/viewform', '_blank')">
+                <div class="contact-icon">✍️</div>
+                <h3>Raise a Query</h3>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLScB8pnXtVzU6rrasBjty6k3_fanaxl9GRxuYTTtlWqlg8KnaA/viewform" target="_blank">Fill our form</a>
+            </div>
+            <div class="contact-card">
+                <div class="contact-icon">📧</div>
+                <h3>Email Us</h3>
+                <a href="mailto:soireeandtre@gmail.com">soireeandtre@gmail.com</a>
+            </div>
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <img src="https://raw.githubusercontent.com/richardsen/images/7a356ce02a1adbc57b6b36fb4a6ad375f3e2222e/instagram.png" alt="Instagram" style="width: 48px; height: 48px;">
+                </div>
+                <h3>Follow Us</h3>
+                <a href="https://instagram.com/soiree_and_tre" target="_blank">@soiree_and_tre</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section how-it-works">
+        <h2 class="section-title">How it works</h2>
+        <p class="section-subtitle">Simple steps to make your event vision a reality</p>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-icon-wrapper">
+                    <div class="step-icon-circle">
+                        <div class="step-icon">📝</div>
+                    </div>
+                    <div class="step-number">1</div>
+                </div>
+                <h3>Fill Form</h3>
+                <p>Share your event details and requirements with us</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon-wrapper">
+                    <div class="step-icon-circle">
+                        <div class="step-icon">📞</div>
+                    </div>
+                    <div class="step-number">2</div>
+                </div>
+                <h3>Follow-up Call</h3>
+                <p>We'll discuss your needs in detail</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon-wrapper">
+                    <div class="step-icon-circle">
+                        <div class="step-icon">🤝</div>
+                    </div>
+                    <div class="step-number">3</div>
+                </div>
+                <h3>Meeting</h3>
+                <p>Visit the venue and explore possibilities</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon-wrapper">
+                    <div class="step-icon-circle">
+                        <div class="step-icon">📋</div>
+                    </div>
+                    <div class="step-number">4</div>
+                </div>
+                <h3>Proposal</h3>
+                <p>Receive a customized event plan</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon-wrapper">
+                    <div class="step-icon-circle">
+                        <div class="step-icon">💰</div>
+                    </div>
+                    <div class="step-number">5</div>
+                </div>
+                <h3>Quotation</h3>
+                <p>Get transparent pricing and finalize</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Explore Nearby -->
+    <section class="section explore-section" id="getaways">
+        <h2 class="section-title">Explore nearby</h2>
+        <p class="section-subtitle">Discover breathtaking destinations close to our venue</p>
+        
+        <div class="carousel-container">
+            <div class="carousel-wrapper">
+                <div class="carousel-track" id="exploreCarouselTrack"></div>
+                <button class="carousel-nav prev" id="explorePrevBtn">←</button>
+                <button class="carousel-nav next" id="exploreNextBtn">→</button>
+            </div>
+            <div class="carousel-dots" id="exploreCarouselDots"></div>
+            <div class="event-count" id="exploreCount"></div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <h2>Partner with us</h2>
+        <p>Ready to create something extraordinary? We're here to bring your vision to life.</p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLScB8pnXtVzU6rrasBjty6k3_fanaxl9GRxuYTTtlWqlg8KnaA/viewform" target="_blank" class="cta-button">Get in touch</a>
+        <div class="contact-links">
+            <a href="mailto:soireeandtre@gmail.com"><span class="icon">✉️</span> soireeandtre@gmail.com</a>
+            <a href="https://instagram.com/soiree_and_tre" target="_blank">
+                <img src="https://raw.githubusercontent.com/richardsen/images/7a356ce02a1adbc57b6b36fb4a6ad375f3e2222e/instagram.png" alt="Instagram" class="instagram-icon"> @soiree_and_tre
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-copyright">
+            Copyright © 2025 | Soirée & Tre
+        </div>
+    </footer>
+
+    </div>
+
+    <script>
+        // Mobile Menu
+        const hamburger = document.getElementById('hamburger');
+        const mobileNav = document.getElementById('mobileNav');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+
+        if (hamburger) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                mobileNav.classList.toggle('active');
+                mobileOverlay.classList.toggle('active');
+                document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+            });
+        }
+
+        if (mobileOverlay) {
+            mobileOverlay.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                mobileNav.classList.remove('active');
+                mobileOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        }
+
+        document.querySelectorAll('.mobile-nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (hamburger) hamburger.classList.remove('active');
+                if (mobileNav) mobileNav.classList.remove('active');
+                if (mobileOverlay) mobileOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                const pageContent = document.getElementById('pageContent');
+                if (loader) loader.classList.add('fade-out');
+                if (pageContent) pageContent.classList.add('show');
+                document.body.classList.remove('loading');
+            }, 2000);
+            
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                if (loader) loader.style.display = 'none';
+            }, 2800);
+
+            // Show hero elements
+            setTimeout(() => {
+                const h1 = document.querySelector('.hero h1');
+                const tagline = document.querySelector('.tagline');
+                const button = document.querySelector('.flexible-button');
+                
+                if (h1) h1.classList.add('show');
+                if (tagline) tagline.classList.add('show');
+                if (button) button.classList.add('show');
+            }, 2500);
+        });
+
+        // Event data
+        const eventData = {
+            nh7: [
+                { image: 'https://raw.githubusercontent.com/richardsen/images/93a0c0ecde6a136baf7c1319cf8dda1bf707c350/WhatsApp%20Image%202025-10-19%20at%2000.01.09.jpeg', title: 'NH7 Weekender 2023', description: 'India\'s happiest music festival comes to life' },
+                { image: 'https://raw.githubusercontent.com/richardsen/images/93a0c0ecde6a136baf7c1319cf8dda1bf707c350/WhatsApp%20Image%202025-10-19%20at%2000.00.52.png', title: 'Festival Vibes', description: 'Music, art, and unforgettable memories' },
+                { image: 'https://raw.githubusercontent.com/richardsen/images/93a0c0ecde6a136baf7c1319cf8dda1bf707c350/WhatsApp%20Image%202025-10-18%20at%2023.44.49%20(1).jpeg', title: 'Crowd Energy', description: 'Thousands dancing to the rhythm' }
+            ],
+            meghalayan: [
+                { image: 'https://raw.githubusercontent.com/richardsen/images/5a061012296ba70114bee919a583f45a30b98b40/800px-Glamping_28Unsplash29_20200210134713.jpg', title: 'Meghalayan Age Festival', description: 'Celebrating nature and culture' },
+                { image: 'https://raw.githubusercontent.com/richardsen/images/5a061012296ba70114bee919a583f45a30b98b40/Header.jpeg', title: 'Nature Connect', description: 'Immersive outdoor experiences' },
+                { image: 'https://raw.githubusercontent.com/richardsen/images/5a061012296ba70114bee919a583f45a30b98b40/a97946cca995199f6fdc238b72f11bd3-scaled.jpg', title: 'Mountain Views', description: 'Breathtaking natural backdrop' },
+                { image: 'https://raw.githubusercontent.com/richardsen/images/5a061012296ba70114bee919a583f45a30b98b40/image_44c2ff82-bc96-4418-97e6-064861a8260a.webp', title: 'Serene Setting', description: 'Perfect blend of comfort and nature' }
+            ],
+            campsites: [
+                { image: 'https://raw.githubusercontent.com/richardsen/images/be55039eb11894f1d1e9208cfc1a46bc2609f93e/WhatsApp%20Image%202025-10-19%20at%2000.01.45.png', title: 'Campsite Experience', description: 'Adventure under the stars' },
+                { image: 'https://raw.githubusercontent.com/richardsen/images/0c8011496de47ed4f3258caaff9bbf1d8e5d286c/camp1.jpeg', title: 'Outdoor Camping', description: 'Cozy camping setup in nature' },
+                { image: 'https://raw.githubusercontent.com/richardsen/images/0c8011496de47ed4f3258caaff9bbf1d8e5d286c/camp2.jpeg', title: 'Nature Retreat', description: 'Perfect blend of adventure and comfort' }
+            ]
+        };
+
+        const propertyData = [
+            { image: 'https://raw.githubusercontent.com/richardsen/images/0c8011496de47ed4f3258caaff9bbf1d8e5d286c/av2.png', title: 'Aerial View', description: 'Bird\'s eye view of the complete venue' },
+            { image: 'https://raw.githubusercontent.com/richardsen/images/be55039eb11894f1d1e9208cfc1a46bc2609f93e/NH7%20Weekender%20Jowai.jpg', title: 'NH7 Weekender Jowai', description: 'Premier event venue with stunning views' },
+            { image: 'https://raw.githubusercontent.com/richardsen/images/be55039eb11894f1d1e9208cfc1a46bc2609f93e/Wenfield%20Festive%20Hills.webp', title: 'Wenfield Festive Hills', description: 'Open-air space perfect for any occasion' }
+        ];
+
+        const exploreData = [
+            { image: 'https://raw.githubusercontent.com/richardsen/images/828e897454c58690f911ddbc8d0a2968b8e073f4/c08e9dd2-38.jpg', title: 'Krang Suri', description: 'Crystal clear blue waters • 78 km away' },
+            { image: 'https://raw.githubusercontent.com/richardsen/images/828e897454c58690f911ddbc8d0a2968b8e073f4/dawki-tour-cabs.jpg', title: 'Dawki', description: 'India\'s cleanest river • 92 km away' },
+            { image: 'https://raw.githubusercontent.com/richardsen/images/828e897454c58690f911ddbc8d0a2968b8e073f4/syntu.jpg', title: 'Syntu Ksiar', description: 'Scenic mountain views • 45 km away' }
+        ];
+
+        let currentEvent = 'nh7';
+        let currentSlide = 0;
+        let propertySlide = 0;
+        let exploreSlide = 0;
+
+        // Carousel Functions
+        function initCarousel(eventType) {
+            currentEvent = eventType;
+            currentSlide = 0;
+            const events = eventData[eventType];
+            
+            const track = document.getElementById('carouselTrack');
+            if (!track) return;
+            
+            track.innerHTML = events.map(event => `
+                <div class="carousel-slide">
+                    <img src="${event.image}" alt="${event.title}" class="carousel-image">
+                    <div class="carousel-overlay">
+                        <h3>${event.title}</h3>
+                        <p>${event.description}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            const dots = document.getElementById('carouselDots');
+            if (dots) {
+                dots.innerHTML = events.map((_, index) => `
+                    <div class="carousel-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></div>
+                `).join('');
+                dots.querySelectorAll('.carousel-dot').forEach(dot => {
+                    dot.addEventListener('click', () => goToSlide(parseInt(dot.dataset.index)));
+                });
+            }
+
+            const count = document.getElementById('eventCount');
+            if (count) count.textContent = `1 / ${events.length}`;
+        }
+
+        function goToSlide(index) {
+            const events = eventData[currentEvent];
+            currentSlide = (index + events.length) % events.length;
+            
+            const track = document.getElementById('carouselTrack');
+            if (track) track.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+            document.querySelectorAll('#carouselDots .carousel-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+
+            const count = document.getElementById('eventCount');
+            if (count) count.textContent = `${currentSlide + 1} / ${events.length}`;
+        }
+
+        function initPropertyCarousel() {
+            const track = document.getElementById('propertyCarouselTrack');
+            if (!track) return;
+            
+            track.innerHTML = propertyData.map(item => `
+                <div class="carousel-slide">
+                    <img src="${item.image}" alt="${item.title}" class="carousel-image">
+                    <div class="carousel-overlay">
+                        <h3>${item.title}</h3>
+                        <p>${item.description}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            const dots = document.getElementById('propertyCarouselDots');
+            if (dots) {
+                dots.innerHTML = propertyData.map((_, index) => `
+                    <div class="carousel-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></div>
+                `).join('');
+                dots.querySelectorAll('.carousel-dot').forEach(dot => {
+                    dot.addEventListener('click', () => goToPropertySlide(parseInt(dot.dataset.index)));
+                });
+            }
+
+            const count = document.getElementById('propertyCount');
+            if (count) count.textContent = `1 / ${propertyData.length}`;
+        }
+
+        function goToPropertySlide(index) {
+            propertySlide = (index + propertyData.length) % propertyData.length;
+            
+            const track = document.getElementById('propertyCarouselTrack');
+            if (track) track.style.transform = `translateX(-${propertySlide * 100}%)`;
+
+            document.querySelectorAll('#propertyCarouselDots .carousel-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === propertySlide);
+            });
+
+            const count = document.getElementById('propertyCount');
+            if (count) count.textContent = `${propertySlide + 1} / ${propertyData.length}`;
+        }
+
+        function initExploreCarousel() {
+            const track = document.getElementById('exploreCarouselTrack');
+            if (!track) return;
+            
+            track.innerHTML = exploreData.map(item => `
+                <div class="carousel-slide">
+                    <img src="${item.image}" alt="${item.title}" class="carousel-image">
+                    <div class="carousel-overlay">
+                        <h3>${item.title}</h3>
+                        <p>${item.description}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            const dots = document.getElementById('exploreCarouselDots');
+            if (dots) {
+                dots.innerHTML = exploreData.map((_, index) => `
+                    <div class="carousel-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></div>
+                `).join('');
+                dots.querySelectorAll('.carousel-dot').forEach(dot => {
+                    dot.addEventListener('click', () => goToExploreSlide(parseInt(dot.dataset.index)));
+                });
+            }
+
+            const count = document.getElementById('exploreCount');
+            if (count) count.textContent = `1 / ${exploreData.length}`;
+        }
+
+        function goToExploreSlide(index) {
+            exploreSlide = (index + exploreData.length) % exploreData.length;
+            
+            const track = document.getElementById('exploreCarouselTrack');
+            if (track) track.style.transform = `translateX(-${exploreSlide * 100}%)`;
+
+            document.querySelectorAll('#exploreCarouselDots .carousel-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === exploreSlide);
+            });
+
+            const count = document.getElementById('exploreCount');
+            if (count) count.textContent = `${exploreSlide + 1} / ${exploreData.length}`;
+        }
+
+        // Initialize
+        initCarousel('nh7');
+        initPropertyCarousel();
+        initExploreCarousel();
+
+        // Event filters
+        document.querySelectorAll('.filter-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+                initCarousel(pill.dataset.event);
+            });
+        });
+
+        // Navigation
+        const propertyPrev = document.getElementById('propertyPrevBtn');
+        const propertyNext = document.getElementById('propertyNextBtn');
+        if (propertyPrev) propertyPrev.addEventListener('click', () => goToPropertySlide(propertySlide - 1));
+        if (propertyNext) propertyNext.addEventListener('click', () => goToPropertySlide(propertySlide + 1));
+
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        if (prevBtn) prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+        if (nextBtn) nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+
+        const explorePrev = document.getElementById('explorePrevBtn');
+        const exploreNext = document.getElementById('exploreNextBtn');
+        if (explorePrev) explorePrev.addEventListener('click', () => goToExploreSlide(exploreSlide - 1));
+        if (exploreNext) exploreNext.addEventListener('click', () => goToExploreSlide(exploreSlide + 1));
+
+        // Auto-play
+        setInterval(() => goToPropertySlide(propertySlide + 1), 5000);
+        setInterval(() => goToSlide(currentSlide + 1), 5000);
+        setInterval(() => goToExploreSlide(exploreSlide + 1), 5000);
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Active nav
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('nav a[href^="#"]');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav a[href^="#"]');
+
+        const navObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    mobileNavLinks.forEach(link => link.classList.remove('active'));
+                    
+                    const activeLink = document.querySelector(`nav a[href="#${id}"]`);
+                    const activeMobile = document.querySelector(`.mobile-nav a[href="#${id}"]`);
+                    if (activeLink) activeLink.classList.add('active');
+                    if (activeMobile) activeMobile.classList.add('active');
+                }
+            });
+        }, { threshold: 0.3, rootMargin: '-100px 0px -50% 0px' });
+
+        sections.forEach(section => navObserver.observe(section));
+
+        // Scroll animations
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
+
+        document.querySelectorAll('.section-title, .section-subtitle').forEach(el => scrollObserver.observe(el));
+
+        document.querySelectorAll('.carousel-container').forEach(el => {
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            obs.observe(el);
+        });
+
+        const filters = document.querySelector('.event-filters');
+        if (filters) {
+            const filterObs = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            filterObs.observe(filters);
+        }
+
+        // Parallax
+        window.addEventListener('scroll', function() {
+            const hero = document.querySelector('.hero');
+            if (!hero) return;
+            const scrolled = window.pageYOffset;
+            if (scrolled < hero.offsetHeight) {
+                hero.style.backgroundPositionY = scrolled * 0.5 + 'px';
+            }
+        });
+
+        // Scroll indicator
+        const scrollIndicator = document.querySelector('.scroll-indicator');
+        if (scrollIndicator) {
+            scrollIndicator.addEventListener('click', () => {
+                window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+            });
+        }
+    </script>
+</body>
+</html>
